@@ -17,7 +17,7 @@ public class GPSController {
 
     @GetMapping("/log")
     public ResponseEntity<Void> log(@RequestParam(name = "lat") String latitude,
-                                    @RequestParam(name = "long") String longitude)
+                                    @RequestParam(name = "longitude") String longitude)
     {
         try {
             double lat = Double.parseDouble(latitude);
