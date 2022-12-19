@@ -9,6 +9,7 @@ import ru.develgame.gpsreceiver.entities.GPSData;
 import ru.develgame.gpsreceiver.repositories.GPSDataRepository;
 
 import java.util.Date;
+import java.util.List;
 
 @RestController
 public class GPSController {
@@ -36,5 +37,11 @@ public class GPSController {
         }
 
         return ResponseEntity.ok(null);
+    }
+
+    @GetMapping("/data")
+    public ResponseEntity<List<GPSData>> data() {
+        List<GPSData> all = gpsDataRepository.findAll();
+        return ResponseEntity.ok(all);
     }
 }

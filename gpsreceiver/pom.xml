@@ -35,6 +35,12 @@
             <artifactId>mariadb-java-client</artifactId>
             <scope>runtime</scope>
         </dependency>
+
+        <dependency>
+            <groupId>ru.develgame</groupId>
+            <artifactId>gpsdomain</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
     <build>
