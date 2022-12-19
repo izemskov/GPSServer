@@ -9,7 +9,8 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>gpsdomain</module>
         <module>gpsreceiver</module>
-        <!--<module>gpsviewer</module>-->
+        <module>gpsviewer</module>
     </modules>
 </project>
