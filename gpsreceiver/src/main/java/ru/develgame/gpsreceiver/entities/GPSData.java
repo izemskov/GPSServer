@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.util.Date;
+import java.sql.Date;
 
 @Entity
 public class GPSData {
@@ -14,7 +14,8 @@ public class GPSData {
 
     private double latitude;
     private double longitude;
-    private Date time;
+    private Date date;
+    private long timestamp;
 
     public long getId() {
         return id;
@@ -40,11 +41,19 @@ public class GPSData {
         this.longitude = longitude;
     }
 
-    public Date getTime() {
-        return time;
+    public Date getDate() {
+        return date;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 }

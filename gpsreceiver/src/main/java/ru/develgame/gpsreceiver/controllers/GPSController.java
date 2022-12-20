@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.develgame.gpsdomain.GPSReceivedData;
 import ru.develgame.gpsreceiver.entities.GPSData;
 import ru.develgame.gpsreceiver.repositories.GPSDataRepository;
 
@@ -16,6 +17,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class GPSController {
@@ -35,7 +37,8 @@ public class GPSController {
             GPSData gpsData = new GPSData();
             gpsData.setLatitude(lat);
             gpsData.setLongitude(longit);
-            gpsData.setTime(new Date());
+            gpsData.setDate(new java.sql.Date(new Date().getTime()));
+            gpsData.setTimestamp(new Date().getTime());
 
             gpsDataRepository.save(gpsData);
 
@@ -49,9 +52,11 @@ public class GPSController {
     }
 
     @GetMapping("/data")
-    public ResponseEntity<List<GPSData>> data() {
+    public ResponseEntity<List<GPSReceivedData>> data() {
         List<GPSData> all = gpsDataRepository.findAll();
-        return ResponseEntity.ok(all);
+        return ResponseEntity.ok(all.stream()
+                .map(t -> new GPSReceivedData(t.getLatitude(), t.getLongitude(), new Date(t.getTimestamp())))
+                .collect(Collectors.toList()));
     }
 
     @GetMapping("/getAllDates")
@@ -59,7 +64,7 @@ public class GPSController {
         List<String> res = new ArrayList<>();
 
         try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement("SELECT time FROM gpsdata GROUP BY TIME")) {
+            try (PreparedStatement statement = connection.prepareStatement("SELECT date FROM gpsdata GROUP BY date")) {
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
                         res.add(resultSet.getString(1));

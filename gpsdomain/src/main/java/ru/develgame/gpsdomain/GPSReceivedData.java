@@ -30,4 +30,10 @@ public class GPSReceivedData {
     public void setTime(Date time) {
         this.time = time;
     }
+
+    public GPSReceivedData(double latitude, double longitude, Date time) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.time = time;
+    }
 }
