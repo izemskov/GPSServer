@@ -8,6 +8,12 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.develgame.gpsreceiver.entities.GPSData;
 import ru.develgame.gpsreceiver.repositories.GPSDataRepository;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,6 +21,9 @@ import java.util.List;
 public class GPSController {
     @Autowired
     private GPSDataRepository gpsDataRepository;
+
+    @Autowired
+    private DataSource dataSource;
 
     @GetMapping("/log")
     public ResponseEntity<Void> log(@RequestParam(name = "lat") String latitude,
@@ -43,5 +52,22 @@ public class GPSController {
     public ResponseEntity<List<GPSData>> data() {
         List<GPSData> all = gpsDataRepository.findAll();
         return ResponseEntity.ok(all);
+    }
+
+    @GetMapping("/getAllDates")
+    public ResponseEntity<List<String>> getAllDates() throws SQLException {
+        List<String> res = new ArrayList<>();
+
+        try (Connection connection = dataSource.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement("SELECT time FROM gpsdata GROUP BY TIME")) {
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    while (resultSet.next()) {
+                        res.add(resultSet.getString(1));
+                    }
+                }
+            }
+        }
+
+        return ResponseEntity.ok(res);
     }
 }
