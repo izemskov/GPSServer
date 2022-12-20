@@ -1,8 +1,18 @@
 <zk>
     <?page title="GPS Viewer"?>
 
-    <div apply="ru.develgame.gpsviewer.composers.GoogleMapsComposer">
-        <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"/>
-        <gmaps id="gmaps" width="800px" height="600px" showSmallCtrl="true"/>
+    <div id="mainView" height="100%" width="100%" apply="ru.develgame.gpsviewer.composers.GoogleMapsComposer">
+        <hbox width="100%" spacing="10" style="margin-top: 10px;" sizedByContent="false">
+            <div>
+                <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"/>
+                <gmaps id="gmaps" width="800px" height="600px" showSmallCtrl="true"/>
+            </div>
+
+            <div>
+                <vlayout>
+                    <combobox id="dateComboBox" model="${$composer.dateModel}" readonly="true"/>
+                </vlayout>
+            </div>
+        </hbox>
     </div>
 </zk>
