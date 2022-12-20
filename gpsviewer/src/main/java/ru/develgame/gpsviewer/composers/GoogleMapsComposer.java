@@ -14,6 +14,8 @@ import org.zkoss.zul.Combobox;
 import org.zkoss.zul.ListModelList;
 import ru.develgame.gpsdomain.GPSReceivedData;
 
+import java.text.SimpleDateFormat;
+
 @VariableResolver(org.zkoss.zkplus.spring.DelegatingVariableResolver.class)
 public class GoogleMapsComposer extends SelectorComposer<Component>{
 	@Wire
@@ -26,6 +28,8 @@ public class GoogleMapsComposer extends SelectorComposer<Component>{
 	private RestTemplate restTemplate;
 
 	private ListModelList<String> dateModel;
+
+	private final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm dd/MM/yy");
 
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
@@ -56,6 +60,7 @@ public class GoogleMapsComposer extends SelectorComposer<Component>{
 				Gmarker gmarker = new Gmarker();
 				gmarker.setLat(elem.getLatitude());
 				gmarker.setLng(elem.getLongitude());
+				gmarker.setTooltiptext(dateFormat.format(elem.getTime()));
 				gmaps.appendChild(gmarker);
 			}
 		}

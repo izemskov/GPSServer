@@ -36,4 +36,7 @@ public class GPSReceivedData {
         this.longitude = longitude;
         this.time = time;
     }
+
+    public GPSReceivedData() {
+    }
 }
