@@ -12,6 +12,7 @@ import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.ListModelList;
+import org.zkoss.zul.Listbox;
 import ru.develgame.gpsdomain.GPSReceivedData;
 
 import java.text.SimpleDateFormat;
@@ -24,10 +25,15 @@ public class GoogleMapsComposer extends SelectorComposer<Component>{
 	@Wire
 	private Combobox dateComboBox;
 
+	@Wire
+	private Listbox pointsList;
+
 	@WireVariable
 	private RestTemplate restTemplate;
 
 	private ListModelList<String> dateModel;
+
+	private ListModelList<GPSReceivedData> pointsDataModel = null;
 
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm dd/MM/yy");
 
@@ -41,6 +47,8 @@ public class GoogleMapsComposer extends SelectorComposer<Component>{
 				getDateModel().add(elem);
 			}
 		}
+
+		pointsList.setModel(pointsDataModel);
 	}
 
 	public ListModelList<String> getDateModel() {
@@ -48,6 +56,14 @@ public class GoogleMapsComposer extends SelectorComposer<Component>{
 			dateModel = new ListModelList<>();
 
 		return dateModel;
+	}
+
+	public ListModelList<GPSReceivedData> getPointsDataModel() {
+		if (pointsDataModel == null) {
+			pointsDataModel = new ListModelList<>();
+		}
+
+		return pointsDataModel;
 	}
 
 	@Listen("onSelect = #dateComboBox")
@@ -63,6 +79,9 @@ public class GoogleMapsComposer extends SelectorComposer<Component>{
 				gmarker.setTooltiptext(dateFormat.format(elem.getTime()));
 				gmaps.appendChild(gmarker);
 			}
+
+			pointsDataModel = new ListModelList<>(gpsReceivedData);
+			pointsList.setModel(pointsDataModel);
 		}
 	}
 }
