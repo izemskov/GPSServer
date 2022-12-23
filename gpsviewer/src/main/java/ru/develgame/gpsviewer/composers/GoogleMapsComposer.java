@@ -15,7 +15,9 @@ import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
 import ru.develgame.gpsdomain.GPSReceivedData;
 
+import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.Set;
 
 @VariableResolver(org.zkoss.zkplus.spring.DelegatingVariableResolver.class)
 public class GoogleMapsComposer extends SelectorComposer<Component>{
@@ -31,7 +33,7 @@ public class GoogleMapsComposer extends SelectorComposer<Component>{
 	@WireVariable
 	private RestTemplate restTemplate;
 
-	private ListModelList<String> dateModel;
+	private ListModelList<Date> dateModel;
 
 	private ListModelList<GPSReceivedData> pointsDataModel = null;
 
@@ -41,9 +43,9 @@ public class GoogleMapsComposer extends SelectorComposer<Component>{
 	public void doAfterCompose(Component comp) throws Exception {
 		super.doAfterCompose(comp);
 
-		String[] allDates = restTemplate.getForObject("http://localhost:8111/getAllDates", String[].class);
+		Date[] allDates = restTemplate.getForObject("http://localhost:8111/getAllDates", Date[].class);
 		if (allDates != null) {
-			for (String elem : allDates) {
+			for (Date elem : allDates) {
 				getDateModel().add(elem);
 			}
 		}
@@ -51,7 +53,7 @@ public class GoogleMapsComposer extends SelectorComposer<Component>{
 		pointsList.setModel(pointsDataModel);
 	}
 
-	public ListModelList<String> getDateModel() {
+	public ListModelList<Date> getDateModel() {
 		if (dateModel == null)
 			dateModel = new ListModelList<>();
 
@@ -68,20 +70,26 @@ public class GoogleMapsComposer extends SelectorComposer<Component>{
 
 	@Listen("onSelect = #dateComboBox")
 	public void dateComboBoxOnSelect() {
-		GPSReceivedData[] gpsReceivedData = restTemplate.getForObject("http://localhost:8111/data", GPSReceivedData[].class);
-		if (gpsReceivedData != null && gpsReceivedData.length > 0) {
-			gmaps.setCenter(new LatLng(gpsReceivedData[0].getLatitude(), gpsReceivedData[0].getLongitude()));
+		Set<Date> selection = dateModel.getSelection();
+		if (!selection.isEmpty()) {
+			GPSReceivedData[] gpsReceivedData = restTemplate.getForObject("http://localhost:8111/data?date={date}",
+					GPSReceivedData[].class,
+					selection.stream().findFirst().get()
+					);
+			if (gpsReceivedData != null && gpsReceivedData.length > 0) {
+				gmaps.setCenter(new LatLng(gpsReceivedData[0].getLatitude(), gpsReceivedData[0].getLongitude()));
 
-			for (GPSReceivedData elem : gpsReceivedData) {
-				Gmarker gmarker = new Gmarker();
-				gmarker.setLat(elem.getLatitude());
-				gmarker.setLng(elem.getLongitude());
-				gmarker.setTooltiptext(dateFormat.format(elem.getTime()));
-				gmaps.appendChild(gmarker);
+				for (GPSReceivedData elem : gpsReceivedData) {
+					Gmarker gmarker = new Gmarker();
+					gmarker.setLat(elem.getLatitude());
+					gmarker.setLng(elem.getLongitude());
+					gmarker.setTooltiptext(dateFormat.format(elem.getTime()));
+					gmaps.appendChild(gmarker);
+				}
+
+				pointsDataModel = new ListModelList<>(gpsReceivedData);
+				pointsList.setModel(pointsDataModel);
 			}
-
-			pointsDataModel = new ListModelList<>(gpsReceivedData);
-			pointsList.setModel(pointsDataModel);
 		}
 	}
 }

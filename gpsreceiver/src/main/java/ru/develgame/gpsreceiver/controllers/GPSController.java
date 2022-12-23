@@ -31,43 +31,49 @@ public class GPSController {
     public ResponseEntity<Void> log(@RequestParam(name = "lat") String latitude,
                                     @RequestParam(name = "longitude") String longitude)
     {
-        try {
-            double lat = Double.parseDouble(latitude);
-            double longit = Double.parseDouble(longitude);
-            GPSData gpsData = new GPSData();
-            gpsData.setLatitude(lat);
-            gpsData.setLongitude(longit);
-            gpsData.setDate(new java.sql.Date(new Date().getTime()));
-            gpsData.setTimestamp(new Date().getTime());
+        double lat = Double.parseDouble(latitude);
+        double longit = Double.parseDouble(longitude);
+        GPSData gpsData = new GPSData();
+        gpsData.setLatitude(lat);
+        gpsData.setLongitude(longit);
+        gpsData.setDate(new java.sql.Date(new Date().getTime()));
+        gpsData.setTimestamp(new Date().getTime());
 
-            gpsDataRepository.save(gpsData);
-
-            System.out.println("lat = " + latitude + "; long = " + longitude);
-        }
-        catch (NumberFormatException ex) {
-            // TODO - add log message
-        }
+        gpsDataRepository.save(gpsData);
 
         return ResponseEntity.ok(null);
     }
 
     @GetMapping("/data")
-    public ResponseEntity<List<GPSReceivedData>> data() {
-        List<GPSData> all = gpsDataRepository.findAll();
-        return ResponseEntity.ok(all.stream()
-                .map(t -> new GPSReceivedData(t.getLatitude(), t.getLongitude(), new Date(t.getTimestamp())))
-                .collect(Collectors.toList()));
+    public ResponseEntity<List<GPSReceivedData>> data(@RequestParam(name = "date") java.sql.Date date) throws SQLException {
+        List<GPSReceivedData> res = new ArrayList<>();
+
+        try (Connection connection = dataSource.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement("SELECT latitude, longitude, timestamp FROM gpsdata WHERE date=?")) {
+                statement.setDate(1, date);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    while (resultSet.next()) {
+                        res.add(new GPSReceivedData(
+                                resultSet.getDouble(1),
+                                resultSet.getDouble(2),
+                                new Date(resultSet.getLong(3))));
+                    }
+                }
+            }
+        }
+
+        return ResponseEntity.ok(res);
     }
 
     @GetMapping("/getAllDates")
-    public ResponseEntity<List<String>> getAllDates() throws SQLException {
-        List<String> res = new ArrayList<>();
+    public ResponseEntity<List<java.sql.Date>> getAllDates() throws SQLException {
+        List<java.sql.Date> res = new ArrayList<>();
 
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement("SELECT date FROM gpsdata GROUP BY date")) {
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        res.add(resultSet.getString(1));
+                        res.add(resultSet.getDate(1));
                     }
                 }
             }
