@@ -10,7 +10,8 @@
 
             <div>
                 <vlayout>
-                    <combobox id="dateComboBox" model="${$composer.dateModel}" readonly="true"/>
+                    <combobox id="dateComboBox" model="${$composer.dateModel}" readonly="true"
+                            itemRenderer="ru.develgame.gpsviewer.renders.DateRender"/>
 
                     <listbox id="pointsList" style="margin-top: 10px;"
                              height="500px;"
