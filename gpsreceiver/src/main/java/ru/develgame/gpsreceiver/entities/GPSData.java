@@ -2,6 +2,7 @@ package ru.develgame.gpsreceiver.entities;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "gpsdata")
@@ -10,11 +11,15 @@ public class GPSData {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private long id;
 
+    @ManyToOne
+    private User user;
+
     private double latitude;
     private double longitude;
     private Date date;
     private long timestamp;
 
+    /* --- Getters and setters --- */
     public long getId() {
         return id;
     }
@@ -53,5 +58,27 @@ public class GPSData {
 
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    /* --- Equals and HashCode ---*/
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GPSData gpsData = (GPSData) o;
+        return id == gpsData.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

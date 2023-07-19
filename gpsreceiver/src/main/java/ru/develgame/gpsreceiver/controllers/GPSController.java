@@ -2,12 +2,14 @@ package ru.develgame.gpsreceiver.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.develgame.gpsdomain.GPSReceivedData;
 import ru.develgame.gpsreceiver.entities.GPSData;
 import ru.develgame.gpsreceiver.repositories.GPSDataRepository;
+import ru.develgame.gpsreceiver.security.SecurityUserDetails;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -30,6 +32,8 @@ public class GPSController {
     public ResponseEntity<Void> log(@RequestParam(name = "lat") String latitude,
                                     @RequestParam(name = "longitude") String longitude)
     {
+        SecurityUserDetails principal = (SecurityUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         double lat = Double.parseDouble(latitude);
         double longit = Double.parseDouble(longitude);
         GPSData gpsData = new GPSData();
@@ -37,6 +41,7 @@ public class GPSController {
         gpsData.setLongitude(longit);
         gpsData.setDate(new java.sql.Date(new Date().getTime()));
         gpsData.setTimestamp(new Date().getTime());
+        gpsData.setUser(principal.getUserEntity());
 
         gpsDataRepository.save(gpsData);
 
@@ -44,12 +49,13 @@ public class GPSController {
     }
 
     @GetMapping("/data")
-    public ResponseEntity<List<GPSReceivedData>> data(@RequestParam(name = "date") java.sql.Date date) throws SQLException {
+    public ResponseEntity<List<GPSReceivedData>> data(@RequestParam(name = "date") java.sql.Date date, @RequestParam(name = "user_id") Long userId) throws SQLException {
         List<GPSReceivedData> res = new ArrayList<>();
 
         try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement("SELECT latitude, longitude, timestamp FROM gpsdata WHERE date=?")) {
+            try (PreparedStatement statement = connection.prepareStatement("SELECT latitude, longitude, timestamp FROM gpsdata WHERE date=? AND user_id=?")) {
                 statement.setDate(1, date);
+                statement.setLong(2, userId);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
                         res.add(new GPSReceivedData(
@@ -65,11 +71,12 @@ public class GPSController {
     }
 
     @GetMapping("/getAllDates")
-    public ResponseEntity<List<java.sql.Date>> getAllDates() throws SQLException {
+    public ResponseEntity<List<java.sql.Date>> getAllDates(@RequestParam(name = "user_id") Long userId) throws SQLException {
         List<java.sql.Date> res = new ArrayList<>();
 
         try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement("SELECT date FROM gpsdata GROUP BY date")) {
+            try (PreparedStatement statement = connection.prepareStatement("SELECT date FROM gpsdata WHERE user_id=? GROUP BY date")) {
+                statement.setLong(1, userId);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
                         res.add(resultSet.getDate(1));

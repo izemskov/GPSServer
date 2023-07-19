@@ -1,11 +1,12 @@
 package ru.develgame.gpsreceiver.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
+@Table(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -14,6 +15,10 @@ public class User {
     private String name;
     private String pwd;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<GPSData> gpsData = new ArrayList<>();
+
+    /* --- Getters and setters --- */
     public long getId() {
         return id;
     }
@@ -36,5 +41,23 @@ public class User {
 
     public void setPwd(String pwd) {
         this.pwd = pwd;
+    }
+
+    public List<GPSData> getGpsData() {
+        return gpsData;
+    }
+
+    /* --- Equals and HashCode ---*/
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
