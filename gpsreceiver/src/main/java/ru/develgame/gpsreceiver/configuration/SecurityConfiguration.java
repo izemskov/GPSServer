@@ -24,7 +24,7 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-//                .antMatchers("/**").access("hasIpAddress('127.0.0.1') or hasIpAddress('::1') or isAuthenticated()")
+                .antMatchers("/**").access("isAuthenticated() or hasIpAddress('127.0.0.1') or hasIpAddress('::1')")
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();
