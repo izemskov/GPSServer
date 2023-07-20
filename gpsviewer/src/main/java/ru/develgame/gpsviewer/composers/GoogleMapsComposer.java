@@ -1,5 +1,6 @@
 package ru.develgame.gpsviewer.composers;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.client.RestTemplate;
 import org.zkoss.gmaps.Gmaps;
 import org.zkoss.gmaps.Gmarker;
@@ -14,6 +15,7 @@ import org.zkoss.zul.Combobox;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
 import ru.develgame.gpsdomain.GPSReceivedData;
+import ru.develgame.gpsviewer.security.SecurityUserDetails;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -43,7 +45,9 @@ public class GoogleMapsComposer extends SelectorComposer<Component>{
 	public void doAfterCompose(Component comp) throws Exception {
 		super.doAfterCompose(comp);
 
-		Date[] allDates = restTemplate.getForObject("http://localhost:8111/getAllDates", Date[].class);
+		SecurityUserDetails principal = (SecurityUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		Date[] allDates = restTemplate.getForObject("http://localhost:8111/getAllDates?user_id=" + principal.getUserEntity().getId(), Date[].class);
 		if (allDates != null) {
 			for (Date elem : allDates) {
 				getDateModel().add(elem);
@@ -70,9 +74,11 @@ public class GoogleMapsComposer extends SelectorComposer<Component>{
 
 	@Listen("onSelect = #dateComboBox")
 	public void dateComboBoxOnSelect() {
+		SecurityUserDetails principal = (SecurityUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
 		Set<Date> selection = dateModel.getSelection();
 		if (!selection.isEmpty()) {
-			GPSReceivedData[] gpsReceivedData = restTemplate.getForObject("http://localhost:8111/data?date={date}",
+			GPSReceivedData[] gpsReceivedData = restTemplate.getForObject("http://localhost:8111/data?date={date}&user_id=" + principal.getUserEntity().getId(),
 					GPSReceivedData[].class,
 					selection.stream().findFirst().get()
 					);

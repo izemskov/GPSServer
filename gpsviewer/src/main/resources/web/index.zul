@@ -18,6 +18,8 @@
                              itemRenderer="ru.develgame.gpsviewer.renders.PointsRender">
                         <listhead>
                             <listheader>Time</listheader>
+                            <listheader>Lat</listheader>
+                            <listheader>Long</listheader>
                         </listhead>
                     </listbox>
                 </vlayout>

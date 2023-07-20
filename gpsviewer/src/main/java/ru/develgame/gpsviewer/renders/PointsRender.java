@@ -13,5 +13,7 @@ public class PointsRender implements ListitemRenderer<GPSReceivedData> {
     @Override
     public void render(Listitem listitem, GPSReceivedData gpsReceivedData, int i) throws Exception {
         listitem.appendChild(new Listcell(dateFormat.format(gpsReceivedData.getTime())));
+        listitem.appendChild(new Listcell(Double.toString(gpsReceivedData.getLatitude())));
+        listitem.appendChild(new Listcell(Double.toString(gpsReceivedData.getLongitude())));
     }
 }
