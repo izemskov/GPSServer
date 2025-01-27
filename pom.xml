@@ -3,14 +3,33 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.0.4</version>
+        <relativePath/>
+    </parent>
+
     <groupId>ru.develgame</groupId>
-    <artifactId>gpsserver</artifactId>
-    <version>1.0</version>
+    <artifactId>gps-server</artifactId>
     <packaging>pom</packaging>
+    <version>2.0.0</version>
+
+    <properties>
+        <java.version>17</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>ZK CE</id>
+            <url>https://mavensync.zkoss.org/maven2</url>
+        </repository>
+    </repositories>
 
     <modules>
-        <module>gpsdomain</module>
-        <module>gpsreceiver</module>
-        <module>gpsviewer</module>
+        <module>gps-server-backend</module>
+        <!--<module>gps-server-frontend</module>-->
     </modules>
 </project>
