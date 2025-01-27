@@ -23,3 +23,5 @@
 hs_err_pid*
 /.idea/
 /gpsdomain/target/
+/gps-server-backend/target/
+/gpsserver.sql
