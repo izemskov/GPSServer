@@ -1,4 +1,4 @@
-package ru.develgame.gpsserver.backend.entities;
+package ru.develgame.gpsserver.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -17,10 +17,13 @@ public class GPSUser {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private String pwd;
 
-    @OneToMany(mappedBy = "gpsUser", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "gpsUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<GPSData> gpsData = new ArrayList<>();
 
     /* --- Equals and HashCode ---*/

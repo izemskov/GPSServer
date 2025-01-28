@@ -1,24 +1,11 @@
 package ru.develgame.gpsserver.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 //import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.develgame.gpsserver.backend.dto.GPSReceivedData;
-import ru.develgame.gpsserver.backend.entities.GPSData;
-import ru.develgame.gpsserver.backend.repositories.GPSDataRepository;
-import ru.develgame.gpsserver.backend.security.SecurityUserDetails;
+import ru.develgame.gpsserver.backend.repository.GPSDataRepository;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 @RestController
 public class GPSController {
