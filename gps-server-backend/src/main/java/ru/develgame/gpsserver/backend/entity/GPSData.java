@@ -1,4 +1,4 @@
-package ru.develgame.gpsserver.backend.entities;
+package ru.develgame.gpsserver.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -16,13 +16,20 @@ public class GPSData {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private GPSUser gpsUser;
 
-    private double latitude;
-    private double longitude;
+    @Column(nullable = false)
+    private Double latitude;
+
+    @Column(nullable = false)
+    private Double longitude;
+
+    @Column(nullable = false)
     private Date date;
-    private long timestamp;
+
+    @Column(nullable = false)
+    private Long timestamp;
 
     /* --- Equals and HashCode ---*/
     @Override

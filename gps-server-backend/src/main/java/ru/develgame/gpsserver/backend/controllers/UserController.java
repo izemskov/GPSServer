@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.develgame.gpsserver.backend.dto.GPSViewerUser;
-import ru.develgame.gpsserver.backend.entities.GPSUser;
-import ru.develgame.gpsserver.backend.repositories.GPSUserRepository;
+import ru.develgame.gpsserver.backend.entity.GPSUser;
+import ru.develgame.gpsserver.backend.repository.GPSUserRepository;
 
 @RestController
 @RequestMapping("user")

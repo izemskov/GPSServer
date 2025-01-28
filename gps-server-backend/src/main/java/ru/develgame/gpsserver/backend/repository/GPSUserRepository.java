@@ -1,7 +1,7 @@
-package ru.develgame.gpsserver.backend.repositories;
+package ru.develgame.gpsserver.backend.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.develgame.gpsserver.backend.entities.GPSUser;
+import ru.develgame.gpsserver.backend.entity.GPSUser;
 
 import java.util.Optional;
 
