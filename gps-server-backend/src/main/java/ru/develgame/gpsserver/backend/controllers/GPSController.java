@@ -2,12 +2,16 @@ package ru.develgame.gpsserver.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.develgame.gpsserver.backend.repository.GPSDataRepository;
 
 import javax.sql.DataSource;
 
 @RestController
+@RequestMapping("/data")
 public class GPSController {
     @Autowired
     private GPSDataRepository gpsDataRepository;
@@ -74,4 +78,9 @@ public class GPSController {
 //
 //        return ResponseEntity.ok(res);
 //    }
+
+    @GetMapping
+    public ResponseEntity<String> test() {
+        return ResponseEntity.ok("test");
+    }
 }

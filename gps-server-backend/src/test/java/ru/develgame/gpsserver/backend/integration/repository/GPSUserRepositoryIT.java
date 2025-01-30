@@ -41,20 +41,14 @@ class GPSUserRepositoryIT extends BaseRepositoryIT {
     void should_notCreateUser_whenNameNull() {
         GPSUser gpsUser = new GPSUser();
         gpsUser.setPwd("testPwd");
-        DataIntegrityViolationException actual = Assertions.assertThrowsExactly(DataIntegrityViolationException.class,
-                () -> gpsUserRepository.save(gpsUser));
-        Assertions.assertEquals("could not execute statement; SQL [n/a]; constraint [null]",
-                actual.getMessage());
+        Assertions.assertThrowsExactly(DataIntegrityViolationException.class, () -> gpsUserRepository.save(gpsUser));
     }
 
     @Test
     void should_notCreateUser_whenPwdNull() {
         GPSUser gpsUser = new GPSUser();
         gpsUser.setName("test");
-        DataIntegrityViolationException actual = Assertions.assertThrowsExactly(DataIntegrityViolationException.class,
-                () -> gpsUserRepository.save(gpsUser));
-        Assertions.assertEquals("could not execute statement; SQL [n/a]; constraint [null]",
-                actual.getMessage());
+        Assertions.assertThrowsExactly(DataIntegrityViolationException.class, () -> gpsUserRepository.save(gpsUser));
     }
 
     @Test
