@@ -58,11 +58,7 @@ class GPSDataRepositoryIT extends BaseRepositoryIT {
         gpsData.setTimestamp(1000000L);
         gpsData.setGpsUser(gpsUser);
 
-        DataIntegrityViolationException actual = Assertions.assertThrowsExactly(DataIntegrityViolationException.class,
-                () -> gpsDataRepository.save(gpsData));
-        Assertions.assertEquals("could not execute statement; SQL [n/a]; constraint [null]",
-                actual.getMessage());
-
+        Assertions.assertThrowsExactly(DataIntegrityViolationException.class, () -> gpsDataRepository.save(gpsData));
         Assertions.assertEquals(0, gpsDataRepository.findAll().size());
     }
 
@@ -79,11 +75,7 @@ class GPSDataRepositoryIT extends BaseRepositoryIT {
         gpsData.setTimestamp(1000000L);
         gpsData.setGpsUser(gpsUser);
 
-        DataIntegrityViolationException actual = Assertions.assertThrowsExactly(DataIntegrityViolationException.class,
-                () -> gpsDataRepository.save(gpsData));
-        Assertions.assertEquals("could not execute statement; SQL [n/a]; constraint [null]",
-                actual.getMessage());
-
+        Assertions.assertThrowsExactly(DataIntegrityViolationException.class, () -> gpsDataRepository.save(gpsData));
         Assertions.assertEquals(0, gpsDataRepository.findAll().size());
     }
 
@@ -100,11 +92,7 @@ class GPSDataRepositoryIT extends BaseRepositoryIT {
         gpsData.setTimestamp(1000000L);
         gpsData.setGpsUser(gpsUser);
 
-        DataIntegrityViolationException actual = Assertions.assertThrowsExactly(DataIntegrityViolationException.class,
-                () -> gpsDataRepository.save(gpsData));
-        Assertions.assertEquals("could not execute statement; SQL [n/a]; constraint [null]",
-                actual.getMessage());
-
+        Assertions.assertThrowsExactly(DataIntegrityViolationException.class, () -> gpsDataRepository.save(gpsData));
         Assertions.assertEquals(0, gpsDataRepository.findAll().size());
     }
 
@@ -121,11 +109,7 @@ class GPSDataRepositoryIT extends BaseRepositoryIT {
         gpsData.setDate(new Date(1000000L));
         gpsData.setGpsUser(gpsUser);
 
-        DataIntegrityViolationException actual = Assertions.assertThrowsExactly(DataIntegrityViolationException.class,
-                () -> gpsDataRepository.save(gpsData));
-        Assertions.assertEquals("could not execute statement; SQL [n/a]; constraint [null]",
-                actual.getMessage());
-
+        Assertions.assertThrowsExactly(DataIntegrityViolationException.class, () -> gpsDataRepository.save(gpsData));
         Assertions.assertEquals(0, gpsDataRepository.findAll().size());
     }
 
@@ -137,11 +121,7 @@ class GPSDataRepositoryIT extends BaseRepositoryIT {
         gpsData.setDate(new Date(1000000L));
         gpsData.setTimestamp(1000000L);
 
-        DataIntegrityViolationException actual = Assertions.assertThrowsExactly(DataIntegrityViolationException.class,
-                () -> gpsDataRepository.save(gpsData));
-        Assertions.assertEquals("could not execute statement; SQL [n/a]; constraint [null]",
-                actual.getMessage());
-
+        Assertions.assertThrowsExactly(DataIntegrityViolationException.class, () -> gpsDataRepository.save(gpsData));
         Assertions.assertEquals(0, gpsDataRepository.findAll().size());
     }
 

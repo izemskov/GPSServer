@@ -14,8 +14,8 @@
     <packaging>jar</packaging>
 
     <properties>
-        <!-- Swagger -->
         <org.springdoc.version>2.0.3</org.springdoc.version>
+        <jsonwebtoken.version>0.11.5</jsonwebtoken.version>
     </properties>
 
     <dependencies>
@@ -28,10 +28,27 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
-        <!--<dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>-->
+        </dependency>
+
+        <!-- JSON Web Token lib -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>${jsonwebtoken.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>${jsonwebtoken.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>${jsonwebtoken.version}</version>
+        </dependency>
 
         <!-- Data -->
         <dependency>
