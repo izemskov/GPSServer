@@ -6,5 +6,5 @@ import lombok.Builder;
 @Builder
 public record AuthRequestDto(@JsonProperty("login") String login,
                              @JsonProperty("password") String password,
-                             @JsonProperty("expiredDays") int expiredDays) {
+                             @JsonProperty("expireDays") int expireDays) {
 }

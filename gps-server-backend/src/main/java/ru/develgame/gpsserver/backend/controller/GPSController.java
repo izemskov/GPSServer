@@ -1,4 +1,4 @@
-package ru.develgame.gpsserver.backend.controllers;
+package ru.develgame.gpsserver.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.core.context.SecurityContextHolder;

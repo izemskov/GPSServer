@@ -81,7 +81,7 @@ class JwtProviderServiceIT extends BaseServiceIT {
                 () -> jwtProviderService.checkAuthAndCreateToken(AuthRequestDto.builder()
                         .login("login")
                         .password("pwd")
-                        .expiredDays(0)
+                        .expireDays(0)
                         .build()));
 
         Assertions.assertEquals("Expires must be more than zero", actual.getMessage());
@@ -90,7 +90,7 @@ class JwtProviderServiceIT extends BaseServiceIT {
                 () -> jwtProviderService.checkAuthAndCreateToken(AuthRequestDto.builder()
                         .login("login")
                         .password("pwd")
-                        .expiredDays(-1)
+                        .expireDays(-1)
                         .build()));
 
         Assertions.assertEquals("Expires must be more than zero", actual.getMessage());
@@ -107,7 +107,7 @@ class JwtProviderServiceIT extends BaseServiceIT {
                 () -> jwtProviderService.checkAuthAndCreateToken(AuthRequestDto.builder()
                         .login("login")
                         .password("pwd")
-                        .expiredDays(1)
+                        .expireDays(1)
                         .build()));
     }
 
@@ -122,7 +122,7 @@ class JwtProviderServiceIT extends BaseServiceIT {
                 () -> jwtProviderService.checkAuthAndCreateToken(AuthRequestDto.builder()
                         .login("login")
                         .password("test")
-                        .expiredDays(1)
+                        .expireDays(1)
                         .build()));
     }
 
@@ -136,7 +136,7 @@ class JwtProviderServiceIT extends BaseServiceIT {
         String actual = jwtProviderService.checkAuthAndCreateToken(AuthRequestDto.builder()
                 .login("login")
                 .password("pwd")
-                .expiredDays(2)
+                .expireDays(2)
                 .build());
 
         Claims actualClaims = Jwts.parser()

@@ -1,4 +1,4 @@
-package ru.develgame.gpsserver.backend.configuration;
+package ru.develgame.gpsserver.backend.configuration.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

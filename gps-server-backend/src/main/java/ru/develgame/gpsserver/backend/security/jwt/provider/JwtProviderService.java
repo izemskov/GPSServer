@@ -25,7 +25,7 @@ public class JwtProviderService {
     public String checkAuthAndCreateToken(AuthRequestDto authRequestDto) {
         validateAuthRequestDto(authRequestDto);
         GPSUser user = checkAndGetUserByLoginAndPassword(authRequestDto.login(), authRequestDto.password());
-        return createToken(user, authRequestDto.expiredDays());
+        return createToken(user, authRequestDto.expireDays());
     }
 
     private void validateAuthRequestDto(AuthRequestDto authRequestDto) {
@@ -41,7 +41,7 @@ public class JwtProviderService {
             throw new InvalidArgumentException("Password cannot be empty");
         }
 
-        if (authRequestDto.expiredDays() <= 0) {
+        if (authRequestDto.expireDays() <= 0) {
             throw new InvalidArgumentException("Expires must be more than zero");
         }
     }

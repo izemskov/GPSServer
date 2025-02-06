@@ -38,6 +38,23 @@ class GPSUserRepositoryIT extends BaseRepositoryIT {
     }
 
     @Test
+    void should_notCreateUser_whenSameLogin() {
+        GPSUser gpsUser = new GPSUser();
+        gpsUser.setName("test");
+        gpsUser.setPwd("testPwd");
+        gpsUser = gpsUserRepository.save(gpsUser);
+
+        GPSUser gpsUser1 = new GPSUser();
+        gpsUser1.setName("test");
+        gpsUser1.setPwd("testPwd");
+        Assertions.assertThrowsExactly(DataIntegrityViolationException.class,
+                () -> gpsUserRepository.save(gpsUser1));
+
+        Assertions.assertEquals(1, gpsUserRepository.findAll().size());
+        Assertions.assertEquals(gpsUser1.getId(), gpsUserRepository.findAll().get(0).getId());
+    }
+
+    @Test
     void should_notCreateUser_whenNameNull() {
         GPSUser gpsUser = new GPSUser();
         gpsUser.setPwd("testPwd");
