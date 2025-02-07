@@ -9,7 +9,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @TestConfiguration
 @ComponentScan({"ru.develgame.gpsserver.backend.security.jwt.provider",
                 "ru.develgame.gpsserver.backend.security.jwt.util",
-                "ru.develgame.gpsserver.backend.security.jwt.auth"})
+                "ru.develgame.gpsserver.backend.security.jwt.auth",
+                "ru.develgame.gpsserver.backend.service"})
 public class TestServiceConfiguration {
     @Bean
     public PasswordEncoder passwordEncoder() {

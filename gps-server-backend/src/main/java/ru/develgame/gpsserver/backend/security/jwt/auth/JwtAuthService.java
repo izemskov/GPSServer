@@ -16,7 +16,6 @@ import ru.develgame.gpsserver.backend.repository.GPSUserRepository;
 import ru.develgame.gpsserver.backend.security.jwt.util.JwtHttpConverterService;
 import ru.develgame.gpsserver.backend.security.jwt.util.JwtSecretManagerService;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class JwtAuthService {
@@ -26,19 +25,16 @@ public class JwtAuthService {
 
     public Authentication getAuth(HttpServletRequest request) {
         if (request == null) {
-            log.debug("Token not found");
             throw new JwtException("Token not found");
         }
 
         String jwtToken = JwtHttpConverterService.extractJwtToken(request);
         if (jwtToken == null || jwtToken.isBlank()) {
-            log.debug("Token not found");
             throw new JwtException("Token not found");
         }
 
         if (gpsDisableTokenRepository.findByToken(jwtToken) != null) {
-            log.debug("JWT token is disabled");
-            throw new JwtException("JWT token is disabled");
+            throw new JwtException("JWT token %s is disabled".formatted(jwtToken));
         }
 
         try {
@@ -48,20 +44,15 @@ public class JwtAuthService {
                     .getBody();
 
             GPSUser gpsUser = gpsUserRepository.findById(Long.parseLong(claims.getSubject()))
-                    .orElseThrow(() -> {
-                        log.debug("GPSUser with id: %s not found".formatted(claims.getSubject()));
-                        return new GPSUserNotFoundException();
-                    });
+                    .orElseThrow(() -> new GPSUserNotFoundException("GPSUser with id: %s not found"
+                            .formatted(claims.getSubject())));
             return new JwtAuthentication(gpsUser);
         } catch (ExpiredJwtException ex) {
-            log.debug("JWT token is expired");
-            throw new JwtException("JWT token is expired");
+            throw new JwtException("JWT token %s is expired".formatted(jwtToken));
         } catch (NumberFormatException ex) {
-            log.debug("JWT token wrong subject");
-            throw new JwtException("JWT token wrong subject");
+            throw new JwtException("JWT token %s wrong subject".formatted(jwtToken));
         } catch (Exception ex) {
-            log.debug("JWT token is invalid");
-            throw new JwtException("JWT token is invalid");
+            throw new JwtException("JWT token %s is invalid".formatted(jwtToken));
         }
     }
 }

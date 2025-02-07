@@ -1,46 +1,31 @@
 package ru.develgame.gpsserver.backend.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.develgame.gpsserver.backend.repository.GPSDataRepository;
-
-import javax.sql.DataSource;
+import ru.develgame.gpsserver.backend.dto.GPSDataRequestDto;
+import ru.develgame.gpsserver.backend.dto.GPSDataResponseDto;
+import ru.develgame.gpsserver.backend.mapper.GPSDataMapper;
+import ru.develgame.gpsserver.backend.service.GPSDataService;
 
 import static ru.develgame.gpsserver.backend.configuration.security.SecurityConfiguration.SECURITY_SCHEME_NAME;
 
 @RestController
 @RequestMapping("/data")
 @SecurityRequirement(name = SECURITY_SCHEME_NAME)
+@RequiredArgsConstructor
 public class GPSController {
-    @Autowired
-    private GPSDataRepository gpsDataRepository;
+    private final GPSDataService gpsDataService;
+    private final GPSDataMapper gpsDataMapper;
 
-    @Autowired
-    private DataSource dataSource;
-
-//    @GetMapping("/log")
-//    public ResponseEntity<Void> log(@RequestParam(name = "lat") String latitude,
-//                                    @RequestParam(name = "longitude") String longitude)
-//    {
-//        SecurityUserDetails principal = (SecurityUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//
-//        double lat = Double.parseDouble(latitude);
-//        double longit = Double.parseDouble(longitude);
-//        GPSData gpsData = new GPSData();
-//        gpsData.setLatitude(lat);
-//        gpsData.setLongitude(longit);
-//        gpsData.setDate(new java.sql.Date(new Date().getTime()));
-//        gpsData.setTimestamp(new Date().getTime());
-//        gpsData.setUser(principal.getUserEntity());
-//
-//        gpsDataRepository.save(gpsData);
-//
-//        return ResponseEntity.ok(null);
-//    }
+    @PostMapping
+    public ResponseEntity<GPSDataResponseDto> create(@RequestBody GPSDataRequestDto data) {
+        return ResponseEntity.ok(gpsDataMapper.toDto(gpsDataService.createData(data)));
+    }
 //
 //    @GetMapping("/data")
 //    public ResponseEntity<List<GPSReceivedData>> data(@RequestParam(name = "date") java.sql.Date date, @RequestParam(name = "user_id") Long userId) throws SQLException {
@@ -81,9 +66,4 @@ public class GPSController {
 //
 //        return ResponseEntity.ok(res);
 //    }
-
-    @GetMapping
-    public ResponseEntity<String> test() {
-        return ResponseEntity.ok("test");
-    }
 }

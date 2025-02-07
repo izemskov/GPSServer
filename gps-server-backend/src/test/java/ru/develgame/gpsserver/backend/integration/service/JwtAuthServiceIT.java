@@ -77,7 +77,7 @@ class JwtAuthServiceIT extends BaseServiceIT {
 
         JwtException actual = Assertions.assertThrowsExactly(JwtException.class,
                 () -> jwtAuthService.getAuth(request));
-        Assertions.assertEquals("JWT token is disabled", actual.getMessage());
+        Assertions.assertEquals("JWT token testjwt is disabled", actual.getMessage());
     }
 
     @Test
