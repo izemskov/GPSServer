@@ -5,10 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Date;
-import java.util.Objects;
 
 @Entity
-@Table(name = "GPSDATA")
+@Table(name = "GPS_DATA")
 @Getter
 @Setter
 public class GPSData {
@@ -30,18 +29,4 @@ public class GPSData {
 
     @Column(nullable = false)
     private Long timestamp;
-
-    /* --- Equals and HashCode ---*/
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        GPSData gpsData = (GPSData) o;
-        return id == gpsData.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }

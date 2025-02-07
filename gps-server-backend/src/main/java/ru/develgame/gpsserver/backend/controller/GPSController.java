@@ -1,7 +1,7 @@
 package ru.develgame.gpsserver.backend.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,8 +10,11 @@ import ru.develgame.gpsserver.backend.repository.GPSDataRepository;
 
 import javax.sql.DataSource;
 
+import static ru.develgame.gpsserver.backend.configuration.security.SecurityConfiguration.SECURITY_SCHEME_NAME;
+
 @RestController
 @RequestMapping("/data")
+@SecurityRequirement(name = SECURITY_SCHEME_NAME)
 public class GPSController {
     @Autowired
     private GPSDataRepository gpsDataRepository;

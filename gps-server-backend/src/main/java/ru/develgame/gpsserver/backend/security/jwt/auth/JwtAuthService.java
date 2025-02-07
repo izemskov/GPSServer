@@ -5,54 +5,63 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import ru.develgame.gpsserver.backend.entity.GPSUser;
+import ru.develgame.gpsserver.backend.exception.GPSUserNotFoundException;
+import ru.develgame.gpsserver.backend.repository.GPSDisableTokenRepository;
+import ru.develgame.gpsserver.backend.repository.GPSUserRepository;
 import ru.develgame.gpsserver.backend.security.jwt.util.JwtHttpConverterService;
+import ru.develgame.gpsserver.backend.security.jwt.util.JwtSecretManagerService;
 
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class JwtAuthService {
-//    private final JwtDisableService jwtDisableService;
-//    private final JwtProviderService jwtProviderService;
-//    private final JwtSecretManagerService jwtSecretManagerService;
+    private final JwtSecretManagerService jwtSecretManagerService;
+    private final GPSDisableTokenRepository gpsDisableTokenRepository;
+    private final GPSUserRepository gpsUserRepository;
 
-    @Value("${jwt.token.refresh.period.days:6}")
-    private final long refreshPeriodDays;
-
-    public Authentication getAuth(HttpServletRequest request, HttpServletResponse response) {
-        String jwtToken = JwtHttpConverterService.extractJwtToken(request);
-        if (jwtToken == null || jwtToken.isBlank()) {
-            return null;
+    public Authentication getAuth(HttpServletRequest request) {
+        if (request == null) {
+            log.debug("Token not found");
+            throw new JwtException("Token not found");
         }
 
-        // TODO
-//        if (jwtDisableService.isDisabledToken(jwtToken)) {
-//            throw new JwtException("JWT token is expired or invalid.");
-//        }
+        String jwtToken = JwtHttpConverterService.extractJwtToken(request);
+        if (jwtToken == null || jwtToken.isBlank()) {
+            log.debug("Token not found");
+            throw new JwtException("Token not found");
+        }
 
-//        Claims claims;
-//        try {
-//            claims = Jwts.parser().setSigningKey(jwtSecretManagerService.getSecret()).parseClaimsJws(jwtToken).getBody();
-//        } catch (ExpiredJwtException ex) {
-//            Date nowDate = new Date();
-//            Date expirationDate = ex.getClaims().getExpiration();
-//            String subject = ex.getClaims().getSubject();
-//            long diff = TimeUnit.DAYS.convert(Math.abs(nowDate.getTime() - expirationDate.getTime()), TimeUnit.MILLISECONDS);
-//            if (diff < refreshPeriodDays) {
-//                jwtToken = jwtProviderService.createToken(subject);
-//                jwtHttpConverterService.injectJwtToken(jwtToken, response);
-//                return new JwtAuthentication(subject);
-//            } else {
-//                throw new JwtException("JWT token is expired or invalid.");
-//            }
-//        }
-//        return new JwtAuthentication(claims.getSubject());
-        return null;
+        if (gpsDisableTokenRepository.findByToken(jwtToken) != null) {
+            log.debug("JWT token is disabled");
+            throw new JwtException("JWT token is disabled");
+        }
+
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(jwtSecretManagerService.getSecret())
+                    .parseClaimsJws(jwtToken)
+                    .getBody();
+
+            GPSUser gpsUser = gpsUserRepository.findById(Long.parseLong(claims.getSubject()))
+                    .orElseThrow(() -> {
+                        log.debug("GPSUser with id: %s not found".formatted(claims.getSubject()));
+                        return new GPSUserNotFoundException();
+                    });
+            return new JwtAuthentication(gpsUser);
+        } catch (ExpiredJwtException ex) {
+            log.debug("JWT token is expired");
+            throw new JwtException("JWT token is expired");
+        } catch (NumberFormatException ex) {
+            log.debug("JWT token wrong subject");
+            throw new JwtException("JWT token wrong subject");
+        } catch (Exception ex) {
+            log.debug("JWT token is invalid");
+            throw new JwtException("JWT token is invalid");
+        }
     }
 }

@@ -6,10 +6,9 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
-@Table(name = "GPSUSER")
+@Table(name = "GPS_USER")
 @Getter
 @Setter
 public class GPSUser {
@@ -17,26 +16,12 @@ public class GPSUser {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 50)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     private String pwd;
 
     @OneToMany(mappedBy = "gpsUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<GPSData> gpsData = new ArrayList<>();
-
-    /* --- Equals and HashCode ---*/
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        GPSUser GPSUser = (GPSUser) o;
-        return id == GPSUser.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }

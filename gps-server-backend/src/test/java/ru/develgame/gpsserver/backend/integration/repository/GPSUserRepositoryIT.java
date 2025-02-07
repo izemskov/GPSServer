@@ -51,7 +51,7 @@ class GPSUserRepositoryIT extends BaseRepositoryIT {
                 () -> gpsUserRepository.save(gpsUser1));
 
         Assertions.assertEquals(1, gpsUserRepository.findAll().size());
-        Assertions.assertEquals(gpsUser1.getId(), gpsUserRepository.findAll().get(0).getId());
+        Assertions.assertEquals(gpsUser.getId(), gpsUserRepository.findAll().get(0).getId());
     }
 
     @Test
